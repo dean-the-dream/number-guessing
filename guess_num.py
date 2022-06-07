@@ -1,11 +1,31 @@
 from numpy import random
 import math 
 
-user_choice = int(input("Hello!\n\nPlease enter a number:  "))
-
-mystery_num = math.floor((random.random() * 1000))  # randomly generate a number (reveist this algoritm)
-try_again = False # does the user have another turn
+mystery_num = math.floor((random.random() * 1000))  # randomly generate a number (reveist this algorithm)
 score = 100 # keep track of the users score
+print(f"""Are you ready to play the guessing game?
+
+It's simple!
+
+Pick a number from 1 to 1000...
+
+If you guess the Mystery Number and you win!
+
+But! If you guess wrong too many times and you lose!
+
+Your score starts at {score}. Good luck!""")
+print()
+
+
+user_choice = input("Guess a number: ")
+while not (user_choice.isdigit() and (int(user_choice) > 1) and (int(user_choice) < 1000)):  # the user's choice 1) must be an integer 2) must be greater than zero 3) must be less than 100
+  user_choice = input("You can only enter whole numbers from 1 to 1000\nLet's try again.\n\nGuess a number: ")
+  print()
+user_choice = int(user_choice)
+
+
+try_again = False # does the user have another turn
+
 lose = False # has the looser lost the game yet
 win = False # has the user won the game yet
 multiples_of = [] # for listing all of the multiples of mystery_num
@@ -21,10 +41,23 @@ results = []
 turn = len(results) + 1
 
 
-while (not win) or (not lose):   
+
+while True:  
+  if user_choice == mystery_num:
+    win = True
+    break
+  else:
+    score -= 5
+  if score <= 0:
+    lose = True
+    break
+
+  
+  results.append({user_choice: score})
+
 #################################################################################################################
 #This will section of code is to create a clue for the customer based on their guess
-  while try_again:
+  if len(results) > 0:
     i = 0
     while i * mystery_num <= (1000):
       multiples_of.append(mystery_num * i)
@@ -62,33 +95,26 @@ while (not win) or (not lose):
     elif is_higher:
       clue = "is higher than" 
     else: 
-      clue = "is lower than" 
+      clue = "is lower than"   
 # test_list = [{"a": 1}, {"b": 2}, {"c": 3}]
 # print(random.choice(test_list))     
 #############################################################################################################
+  print("Sorry! That isn't the mystery number.")
+  print(f"{user_choice} {clue} the mystery number!")
+  print(f"Your score is now {score}!")
   
-
-  if user_choice == mystery_num:
-    is_same = True
-    win = True
-  else:
-    is_same = False
-    score -= 5
-  if score <= 0:
-    lose = True
-    
-  print("Sorry! That wasn't the number\n")
-  print(f"{user_choice} {clue} the mystery number!\n")
-  user_choice = input("Try picking again: ")  
-  results.append({user_choice: score})
-
-  if win or lose:
-    try_again = False
-
+  user_choice = input("\nPick another number: ")
+  
+  while not (user_choice.isdigit() and (int(user_choice) > 1) and (int(user_choice) < 1000)):
+    user_choice = input("You can only enter whole numbers from 1 to 1000\nLet's try again.\n\nGuess a number: ")
+    print()
+  user_choice = int(user_choice)
+  
+      
 if win:
-  print("You win!")
-  print(f"Your score is {results[len(results) - 1][user_choice]}")
+    print("\nYou win!")
+    print("The Mystery Number is", mystery_num)
+    print(f"Your score is {score}!")
 else:
-  print("You lose!")
-
-  
+    print("\nYou lose, sorry!")
+    print("The Mystery Number is", mystery_num)
